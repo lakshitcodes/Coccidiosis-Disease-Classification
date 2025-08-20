@@ -4,12 +4,12 @@ with open("README.md", "r", encoding="utf-8") as f:
     long_description = f.read()
 
 
-__version__="0.0.0"
+__version__ = "0.0.0"
 
-REPO_NAME="Coccidiosis-Disease-Classification"
-AUTHOR_USER_NAME="lakshitcodes"
-SRC_REPO="Coccidiosis-Disease-Classification"
-AUTHOR_EMAIL="jainlakshit849@gmail.com"
+REPO_NAME = "coccidiosisDiseaseClassification"
+AUTHOR_USER_NAME = "lakshitcodes"
+SRC_REPO = "coccidiosisDiseaseClassification"
+AUTHOR_EMAIL = "jainlakshit849@gmail.com"
 
 setuptools.setup(
     name=SRC_REPO,
@@ -24,5 +24,5 @@ setuptools.setup(
         "Bug_Tracker": "https://github.com/lakshitcodes/Coccidiosis-Disease-Classification/issues",
     },
     package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src")
+    packages=setuptools.find_packages(where="src"),
 )
