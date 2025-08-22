@@ -1,0 +1,123 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python3 
+      src/coccidiosisDiseaseClassification/pipeline/stage_01_data_ingestion.py
+    deps:
+    - path: params.yaml
+      hash: md5
+      md5: 5523fe9c40c09abf54343941bf4729c1
+      size: 178
+    - path: 
+        src/coccidiosisDiseaseClassification/pipeline/stage_01_data_ingestion.py
+      hash: md5
+      md5: fbd97a58f6e917a55537002a47f7038c
+      size: 938
+    outs:
+    - path: artifacts/data_ingestion/Chicken-fecal-images
+      hash: md5
+      md5: 9e1f8dd2eae3c29e9d635df89d438ae4.dir
+      size: 12207807
+      nfiles: 390
+  prepare_base_model:
+    cmd: python3 
+      src/coccidiosisDiseaseClassification/pipeline/stage_02_prepare_base_model.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 12d771d232f9013ec46cb63b08af2c79
+      size: 790
+    - path: 
+        src/coccidiosisDiseaseClassification/pipeline/stage_02_prepare_base_model.py
+      hash: md5
+      md5: df154316fa9c0d2eafa2363bc7996693
+      size: 1037
+    params:
+      params.yaml:
+        CLASSES: 2
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+        INCLUDE_TOP: false
+        LEARNING_RATE: 0.01
+        WEIGHTS: imagenet
+    outs:
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 643338131a6b2b15dea2262c77db31da.dir
+      size: 118073512
+      nfiles: 2
+  training:
+    cmd: python3 
+      src/coccidiosisDiseaseClassification/pipeline/stage_03_training.py
+    deps:
+    - path: artifacts/data_ingestion/Chicken-fecal-images
+      hash: md5
+      md5: 9e1f8dd2eae3c29e9d635df89d438ae4.dir
+      size: 12207807
+      nfiles: 390
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 643338131a6b2b15dea2262c77db31da.dir
+      size: 118073512
+      nfiles: 2
+    - path: config/config.yaml
+      hash: md5
+      md5: 12d771d232f9013ec46cb63b08af2c79
+      size: 790
+    - path: src/coccidiosisDiseaseClassification/components/prepare_callbacks.py
+      hash: md5
+      md5: 8440dc71fe4b720a9bc6057361a3e501
+      size: 854
+    - path: src/coccidiosisDiseaseClassification/pipeline/stage_03_training.py
+      hash: md5
+      md5: b61070d8f518e49438305176ebe98d03
+      size: 1294
+    params:
+      params.yaml:
+        AUGMENTATION: true
+        BATCH_SIZE: 16
+        EPOCHS: 10
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 26e4393cd9740adb3fef70f17fb22268
+      size: 59147448
+  evaluation:
+    cmd: python3 
+      src/coccidiosisDiseaseClassification/pipeline/stage_04_evaluation.py
+    deps:
+    - path: artifacts/data_ingestion/Chicken-fecal-images
+      hash: md5
+      md5: 9e1f8dd2eae3c29e9d635df89d438ae4.dir
+      size: 12207807
+      nfiles: 390
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 26e4393cd9740adb3fef70f17fb22268
+      size: 59147448
+    - path: config/config.yaml
+      hash: md5
+      md5: 12d771d232f9013ec46cb63b08af2c79
+      size: 790
+    - path: src/coccidiosisDiseaseClassification/pipeline/stage_04_evaluation.py
+      hash: md5
+      md5: 81705fd2369c7acee274ad7148afc9e7
+      size: 914
+    params:
+      params.yaml:
+        BATCH_SIZE: 16
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: scores.json
+      hash: md5
+      md5: d89704ed32b384c1648232e3179c1311
+      size: 70
