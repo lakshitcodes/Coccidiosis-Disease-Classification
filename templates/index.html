@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coccidiosis Detection</title>
+  <link rel="icon" href="{{ url_for('static', filename='chicken.png') }}" type="image/png">
+
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #dbeafe, #e0f7fa, #f8fbff);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #333;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .upload-area {
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(12px);
+      border: 2px dashed rgba(255,255,255,0.5);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      max-width: 500px;
+      width: 100%;
+      transition: all 0.3s;
+    }
+
+    .upload-area:hover {
+      background: rgba(255,255,255,0.55);
+      border-color: rgba(255,255,255,0.8);
+      transform: translateY(-4px);
+    }
+
+    #previewImage {
+      max-width: 100%;
+      max-height: 280px;
+      display: none;
+      margin: 1.5rem auto;
+      border-radius: 14px;
+      object-fit: contain;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      margin: 0.6rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #fff;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    #uploadBtn {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+    #uploadBtn:hover {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    #predictBtn {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+    #predictBtn:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+    }
+
+    #resultBox {
+      margin-top: 1.8rem;
+      padding: 1.2rem 1.6rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      display: none;
+      font-weight: 600;
+      text-align: center;
+      font-size: 1rem;
+      color: #111;
+    }
+
+    .healthy {
+      background: rgba(34,197,94,0.2) !important;
+      color: #047857 !important;
+      border: 2px solid #10b981;
+    }
+
+    .coccidiosis {
+      background: rgba(239,68,68,0.2) !important;
+      color: #b91c1c !important;
+      border: 2px solid #ef4444;
+    }
+
+    footer {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: auto;
+      color: #333;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    footer a {
+      color: #2563eb;
+      text-decoration: none;
+      margin: 0 0.5rem;
+      font-weight: 500;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .btn {
+        width: 100%;
+        margin: 0.6rem 0;
+      }
+      #previewImage {
+        max-height: 200px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🐔 Coccidiosis Detection</h1>
+    <div class="upload-area">
+      <input type="file" id="fileinput" accept="image/*" hidden />
+      <p>Click "Upload" to Select an Image</p>
+      <img id="previewImage" alt="Preview"/>
+      <div>
+        <button type="button" class="btn" id="uploadBtn">Upload</button>
+        <button type="button" class="btn" id="predictBtn">Predict</button>
+      </div>
+    </div>
+
+    <div id="resultBox">
+      <p id="predictionText">Prediction will appear here</p>
+    </div>
+  </div>
+
+  <footer>
+    Made with ❤️ by Lakshit Jain · 
+    <a href="https://www.linkedin.com/in/jainlakshit" target="_blank">LinkedIn</a> · 
+    <a href="https://github.com/lakshitcodes/Coccidiosis-Disease-Classification" target="_blank">GitHub</a>
+  </footer>
+
+<script>
+  const fileInput = document.getElementById('fileinput');
+  const previewImage = document.getElementById('previewImage');
+  const resultBox = document.getElementById('resultBox');
+  const predictionText = document.getElementById('predictionText');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const predictBtn = document.getElementById('predictBtn');
+
+  let base64Data = "";
+
+  // clicking Upload button opens file chooser
+  uploadBtn.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  // preview selected image & convert to base64
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        previewImage.src = evt.target.result;
+        previewImage.style.display = 'block';
+        base64Data = evt.target.result.replace(/^data:image\/(png|jpeg);base64,/, "");
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // send image to backend for prediction
+  predictBtn.addEventListener('click', async () => {
+    if (!base64Data) {
+      alert("Please upload an image first.");
+      return;
+    }
+
+    resultBox.style.display = 'block';
+    resultBox.className = ""; // reset classes
+    predictionText.textContent = "Predicting... ⏳";
+
+    try {
+      const response = await fetch("../predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ image: base64Data })
+      });
+
+      const result = await response.json();
+      
+      if (Array.isArray(result) && result.length > 0 && result[0].image) {
+        predictionText.textContent = result[0].image;
+
+        if (result[0].image.includes("Healthy")) {
+          resultBox.classList.add("healthy");
+        } else if (result[0].image.includes("Coccidiosis")) {
+          resultBox.classList.add("coccidiosis");
+        }
+      } else {
+        predictionText.textContent = "⚠️ Unexpected response format";
+        console.log("Backend response:", result);
+      }
+
+    } catch (err) {
+      predictionText.textContent = "❌ Error getting prediction";
+      console.error(err);
+    }
+  });
+</script>
+
+</body>
+</html>
