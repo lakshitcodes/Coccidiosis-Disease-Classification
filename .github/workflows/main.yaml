@@ -84,9 +84,9 @@ jobs:
         run: |
           docker pull ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
 
-      - name: Stop and remove container if running
-        run: |
-          docker ps -q --filter "name=coccidiosisclassifier" | grep -q . && docker stop coccidiosisclassifier && docker rm -fv coccidiosisclassifier
+      # - name: Stop and remove container if running
+      # run: |
+      # docker ps -q --filter "name=coccidiosisclassifier" | grep -q . && docker stop coccidiosisclassifier && docker rm -fv coccidiosisclassifier
 
       - name: Run Docker Image to serve users
         run: |
