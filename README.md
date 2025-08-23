@@ -109,11 +109,14 @@ Coccidiosis-Disease-Classification/
 
 <h2 style="font-size:1.5em;">🖼️ Example Images</h2>
 
-<p align="center">
-   <img src="images/image-2.png" alt="Website Base" />
-   <img src="images/healthy_sample.png" alt="Healthy Sample"/>
-   <img src="images/coccidiosis_detected.png" alt="Coccidiosis Detected" />
-</p>
+<div align="center">
+   <img src="images/image-2.png" alt="Website Base" width="300"/>
+   <div style="font-size:1.1em; margin-bottom:1em;">Website Base</div>
+   <img src="images/healthy_sample.png" alt="Healthy Sample" width="300"/>
+   <div style="font-size:1.1em; margin-bottom:1em;">Healthy Sample</div>
+   <img src="images/coccidiosis_detected.png" alt="Coccidiosis Detected" width="300"/>
+   <div style="font-size:1.1em;">Coccidiosis Detected</div>
+</div>
 ---
 
 <h2 style="font-size:1.5em;">⚙️ How to Run</h2>
