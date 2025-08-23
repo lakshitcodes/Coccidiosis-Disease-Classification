@@ -110,10 +110,9 @@ Coccidiosis-Disease-Classification/
 <h2 style="font-size:1.5em;">🖼️ Example Images</h2>
 
 <p align="center">
-   <img src="images/image-2.png" alt="Website Base" width="300"/>
-   ![alt text](image.png)
-   <img src="images/coccidiosis_detected.png" alt="Coccidiosis Detected" width="300"/>
-   <img src="images/healthy_sample.png" alt="Healthy Sample" width="300"/>
+   ![Website Base](images/image-2.png.png)
+   ![Website Base](images/healthy_sample.png)
+   ![Website Base](images/coccidiosis_detected.png)
 </p>
 
 ---
